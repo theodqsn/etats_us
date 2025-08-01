@@ -53,7 +53,7 @@ def etats_us_p(tps= None):
 
 def liste_etats():
   liste = []
-  with open('/Workspace/Users/theo.duquesne@armor-iimak.com/empilements des cylindres/noms_etats.txt', 'r', encoding='latin1') as file:
+  with open('noms_etats.txt', 'r', encoding='latin1') as file:
       for line in file:
           i = 0
           cpt = 0
