@@ -68,16 +68,17 @@ def etats_us_p(tps=None):
 
     lancer_chrono()
 
-    # Affichage custom façon "######" et "🌳"
     def afficher_actuels():
         with output:
             clear_output(wait=True)
-            print("🌍 États des USA à deviner :\n")
+            print("🌍 À deviner :\n")
+            a_print = ''
             for nom in liste_complete:
                 if nom in trouvés:
-                    print("🌳", nom)
+                    a_print+="🌳"+ nom
                 else:
-                    print("######")
+                    a_print += "######"
+            print(a_print)
             print(f"\n🔎 États restants : {len(restants)}")
 
     # Fonction appelée à chaque validation
