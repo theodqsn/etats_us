@@ -29,10 +29,10 @@ def liste_etats():
                 i += 1
                 f2 = False
             liste.append(nom)
-    liste[36] = 'Caroline du Nord' 
-    liste[37] = 'Dakota du Nord' 
-    liste[44] = 'Caroline du Sud'
-    liste[45] = 'Dakota du Sud'
+    liste[33] = 'Caroline du Nord' 
+    liste[34] = 'Dakota du Nord' 
+    liste[40] = 'Caroline du Sud'
+    liste[41] = 'Dakota du Sud'
     liste.pop(-1)
     liste.pop(-1)
     return liste
