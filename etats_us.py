@@ -4,6 +4,7 @@ import sys
 from IPython.display import display, clear_output
 import ipywidgets as widgets
 
+
 def liste_etats():
     liste = []
     with open('noms_etats.txt', 'r', encoding='latin1') as file:
@@ -37,63 +38,68 @@ def liste_etats():
     return liste
 
 def etats_us_p(tps=None):
-    all_states = liste_etats()
-    remaining = set(all_states)
-    found = []
+    # Chargement de la liste
+    liste_complete = liste_etats()
+    restants = liste_complete.copy()
+    trouvés = []
 
-    output = widgets.Output()
+    # Widgets
     input_box = widgets.Text(placeholder='Entrez un État')
     bouton = widgets.Button(description="Valider")
     chrono_label = widgets.Label(value="⏱️ Temps écoulé : 0 s")
     message = widgets.Label(value="")
+    output = widgets.Output()
 
+    # Affichage initial
     display(chrono_label, input_box, bouton, output, message)
 
-    # Chronomètre en thread
-    stop_event = threading.Event()
+    # Chrono
     debut = time.time()
 
-    def chrono():
-        while not stop_event.is_set():
-            ecoule = int(time.time() - debut)
-            chrono_label.value = f"⏱️ Temps écoulé : {ecoule} s"
-            if tps is not None and ecoule >= tps:
-                message.value = "⛔ Temps écoulé ! Partie perdue."
-                bouton.disabled = True
-                input_box.disabled = True
-                stop_event.set()
-            time.sleep(1)
+    def lancer_chrono():
+        ecoule = int(time.time() - debut)
+        chrono_label.value = f"⏱️ Temps écoulé : {ecoule} s"
+        if tps is not None and ecoule >= tps:
+            message.value = "⛔ Temps écoulé ! Partie perdue."
+            bouton.disabled = True
+            input_box.disabled = True
+        else:
+            threading.Timer(1, lancer_chrono).start()
 
-    thread = threading.Thread(target=chrono)
-    thread.start()
+    lancer_chrono()
 
-    # Affichage des états trouvés
-    def update_display():
+    # Affichage custom façon "######" et "🌳"
+    def afficher_actuels():
         with output:
             clear_output(wait=True)
-            print("🌿 États trouvés :")
-            print(", ".join(sorted(found)))
-            print("\n🔍 États restants :")
-            print(f"{len(remaining)} restants.")
+            print("🌍 États des USA à deviner :\n")
+            for nom in liste_complete:
+                if nom in trouvés:
+                    print("🌳", nom)
+                else:
+                    print("######")
+            print(f"\n🔎 États restants : {len(restants)}")
 
-    # Callback bouton
-    def on_valider(_):
+    # Fonction appelée à chaque validation
+    def valider(_):
         nom = input_box.value.strip()
-        if nom in remaining:
-            found.append(nom)
-            remaining.remove(nom)
+        if bouton.disabled:
+            return
+        if nom in restants:
+            restants.remove(nom)
+            trouvés.append(nom)
             message.value = f"✅ Bien joué : {nom}"
         else:
             message.value = f"❌ Mauvais ou déjà trouvé : {nom}"
         input_box.value = ""
-        update_display()
-        if not remaining:
+        afficher_actuels()
+        if not restants:
             message.value = "🏆 Victoire ! Tous les états trouvés."
             bouton.disabled = True
             input_box.disabled = True
-            stop_event.set()
 
-    bouton.on_click(on_valider)
-    input_box.on_submit(on_valider)
+    bouton.on_click(valider)
+    input_box.on_submit(valider)
 
-    update_display()
+    afficher_actuels()
+
