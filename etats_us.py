@@ -76,7 +76,11 @@ def etats_us_p(tps=None):
             i = 0
             for nom in liste_complete:
                 if nom in trouvés:
+                    i+=1
                     a_print+=" 🌳"+ nom + ' '
+                    if i== 5 :
+                        a_print += '\n'
+                        i= 0
                 else:
                     i+=1
                     a_print += " ###### "
