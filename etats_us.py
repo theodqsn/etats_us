@@ -73,11 +73,16 @@ def etats_us_p(tps=None):
             clear_output(wait=True)
             print("🌍 À deviner :\n")
             a_print = ''
+            i = 0
             for nom in liste_complete:
                 if nom in trouvés:
                     a_print+="🌳"+ nom
                 else:
-                    a_print += "######"
+                    i+=1
+                    a_print += " ###### "
+                    if i== 5 :
+                        a_print += '\n'
+                        i= 0
             print(a_print)
             print(f"\n🔎 États restants : {len(restants)}")
 
